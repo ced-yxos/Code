@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fire-lookout-tower-2
+  labels:
+    app: fire-lookout-tower-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fire-lookout-tower-2
+  template:
+    metadata:
+      labels:
+        app: fire-lookout-tower-2
+    spec:
+      imagePullSecrets:
+        - name: repo-key
+      containers:
+        - name: fire-lookout-tower-2
+          image: yxos/proxy_log
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5555
+            - containerPort: 1935
+          securityContext:
+            privileged: true
+            capabilities:
+              add: [NET_ADMIN]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fire-lookout-tower-2-service
+spec:
+  selector:
+    app: fire-lookout-tower-2
+  type: NodePort
+  ports:
+    - name: rtmp
+      protocol: TCP
+      port: 1935
+      targetPort: 1935
+      nodePort: 31935
+    - name: http
+      protocol: TCP
+      port: 5555
+      targetPort: 5555
+      nodePort: 31555

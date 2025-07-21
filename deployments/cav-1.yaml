@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cav-1
+  labels:
+    app: cav-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cav-1
+  template:
+    metadata:
+      labels:
+        app: cav-1
+    spec:
+      imagePullSecrets:
+        - name: repo-key
+      containers:
+        - name: cav-1
+          image: yxos/proxy_log
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5555
+            - containerPort: 1935
+          securityContext:
+            privileged: true
+            capabilities:
+              add: [NET_ADMIN]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cav-1-service
+spec:
+  selector:
+    app: cav-1
+  type: NodePort
+  ports:
+    - name: rtmp
+      protocol: TCP
+      port: 1935
+      targetPort: 1935
+      nodePort: 31931
+    - name: http
+      protocol: TCP
+      port: 5555
+      targetPort: 5555
+      nodePort: 31551
