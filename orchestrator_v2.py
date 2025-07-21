@@ -15,8 +15,8 @@ controller_host = "localhost"
 controller_port = 6381
 controller_db = redis.StrictRedis(host=presence_host, port=controller_port, decode_responses=True)
 
-#
-manager_url = "http://194.199.113.18:5000"
+infra_ip = ""
+manager_url = f"http:{infra_ip}//:5000"
 
 #setting up data intelligence provide
 monitoring_ip = "http://localhost:9001/predict"

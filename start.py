@@ -102,6 +102,7 @@ def planifier_placement(latence_data: dict, requirements: dict) -> dict:
 
 
 # Exemple d'utilisation :
+#Initialiser les latences des noeuds
 result = extract_first_latencies("time_series.json")
 result["uav"]= 15
 
